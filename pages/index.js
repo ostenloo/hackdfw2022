@@ -1,27 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { initializeApp } from "firebase/app"; // Import the functions you need from the SDKs you need
-import { getAnalytics } from "firebase/analytics";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCGoIXSlUKMIHw3XTe36D7SM31iNHrOM9A",
-  authDomain: "safestream-709ac.firebaseapp.com",
-  projectId: "safestream-709ac",
-  storageBucket: "safestream-709ac.appspot.com",
-  messagingSenderId: "253553987725",
-  appId: "1:253553987725:web:3815d9109411a2adbb52c4",
-  measurementId: "G-6XHPHXD887"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 export default function Home() {
   return (
