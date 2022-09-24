@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.6",
+    "@splinetool/react-spline": "^2.2.3",
+    "@splinetool/runtime": "^0.9.109",
     "aws-sdk": "^2.1223.0",
     "crypto": "^1.0.1",
     "next": "12.3.1",

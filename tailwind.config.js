@@ -5,6 +5,10 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    extend: {},
+    colors : {
+      
+    },
     extend: {
       fontFamily: { 
         google : ['Roboto,arial,sans-serif'],
@@ -20,5 +24,6 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 }
