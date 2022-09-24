@@ -6,6 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    colors : {
+      
+    },
+    fontFamily: { 
+        google : ['Roboto,arial,sans-serif']
+    },
   },
-  plugins: [],
+  plugins: [
+  ],
 }
