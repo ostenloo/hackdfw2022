@@ -1,23 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Camera = () => {
-    const [cameras, setCameras] = useState([]);
-    const [mics, setMics] = useState([]);
-    const [screenLock, setScreenLock] = useState(null);
+    const loadRef = useRef(false);
 
     const videoRef = useRef(null);
     const videoRef2 = useRef(null);
-
-    const getDevices = async () => {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const cameras = devices.filter(device => device.kind === "videoinput");
-        console.log(cameras);
-        const mics = devices.filter(device => device.kind === "audioinput");
-        console.log(mics);
-        setCameras(cameras);
-        setMics(mics);
-        return;
-    }
 
     async function stopRecording() {
         await screenLockApi();
@@ -69,28 +56,32 @@ const Camera = () => {
     const startRecording = async () => {
         let cameras = [];
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
                 .then(stream => {
                     console.log("first", stream);
                     let video = videoRef.current;
                     video.srcObject = stream;
                     video.play().catch(err => console.log(err));
                 })
-                .catch(err => console.error(err)).finally(() => {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
-                .then(stream => {
-                    console.log("second", stream);
-                    let video = videoRef2.current;
-                    video.srcObject = stream;
-                    video.play().catch(err => console.log(err));
-                })
-                .catch(err => console.error(err));
+                .catch(err => console.error(err))
+                .finally(() => {
+                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
+                        .then(stream => {
+                            console.log("second", stream);
+                            let video = videoRef2.current;
+                            video.srcObject = stream;
+                            video.play().catch(err => console.log(err));
+                        })
+                        .catch(err => console.error(err));
                 });
         }
     }
 
     useEffect(() => {
-        startRecording();
+        async function pageLoad() { await startRecording(); }
+        if (!loadRef.current) {
+            loadRef.current = true;
+        } else pageLoad();        
     }, []);
 
     return (
