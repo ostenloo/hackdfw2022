@@ -5,6 +5,10 @@ const Camera = () => {
     const [mediaRecorder, setMediaRecorder] = useState(null);
 
     async function stopRecording() {
+        var R = document.getElementById("R");
+        var G = document.getElementById("G");
+        R.style.display = "none";
+        G.style.display = "block";
         await screenLockApi();
         mediaRecorder.stop();
         const stream = [videoRef.current.srcObject];
@@ -80,6 +84,10 @@ const Camera = () => {
     }
 
     const startRecording = async () => {
+        var R = document.getElementById("R");
+        var G = document.getElementById("G");
+        R.style.display = "block";
+        G.style.display = "none";
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
                 .then(stream => {
@@ -114,16 +122,17 @@ const Camera = () => {
 
     return (
         <>
-            <h1 className="text-5xl mb-4">Welcome to SafeStream</h1>
-            <div className="max-w-[1280px]">
-                <video ref={videoRef} autoPlay muted />
+            <h1 className="text-6xl font-bold mb-6 text-spacecadet">Welcome to SafeStream</h1>
+            <div className="relative max-w-[1280px] border-8 w-1/2 md:w-1/2 md:p-2 rounded-[16px] overflow-hidden bg-white border-queenblue"> 
+                <video ref={videoRef} autoPlay muted className="rounded-[8px]"/>
+                <button id="R" className="absolute top-20 left-60 bg-red-500 text-white font-bold text-6xl p-8 w-64 h-64 rounded-full" onClick={stopRecording}>STOP</button>
+                <button id="G" className="absolute top-20 left-60 bg-green-500 text-white font-bold text-6xl p-8 w-64 h-64 rounded-full" onClick={startRecording}>START</button>
                 {/* <video className="my-4" ref={videoRef2} autoPlay muted /> */}
             </div>
             <div className="max-w-[1250px]">
-                <h1 className="text-3xl mt-4 overflow-hidden">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h1>
+                <h3 className="text-xs mt-2 mb-4 overflow-hidden text-spacecadet">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h3>
             </div>
-            <button className="bg-red-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={stopRecording}>STOP</button>
-            <button className="bg-green-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={startRecording}>START (DEBUG ONLY)</button>
+            {/* <button className="bg-green-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={startRecording}>START (DEBUG ONLY)</button> */}
         </>
     );
 }
