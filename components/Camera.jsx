@@ -52,6 +52,7 @@ const Camera = () => {
         if (e.data.size > 0) {
             const dataArr = [e.data];
             const blob = new Blob(dataArr, { type: "video/webm" });
+            uploadAWS(blob);
             const url = URL.createObjectURL(blob);
             const download = document.createElement("a");
             document.body.appendChild(download);
@@ -61,6 +62,21 @@ const Camera = () => {
             download.click();
             window.URL.revokeObjectURL(url);
         }
+    }
+
+    const uploadAWS = async (blob) => {
+        const url = await fetch("/api/aws", {
+            method: "GET"
+        }).then((res) => res.json()).then((data) => data.uploadURL);
+        console.log(url);
+        const response = await fetch(url, {
+            method: "PUT",
+            body: blob,
+            headers: {
+                "Content-Type": "video/webm"
+            }
+        }).then((res) => res.text());
+        console.log(response);
     }
 
     const startRecording = async () => {
