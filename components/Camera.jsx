@@ -5,6 +5,10 @@ const Camera = () => {
     const [mediaRecorder, setMediaRecorder] = useState(null);
 
     async function stopRecording() {
+        var R = document.getElementById("R");
+        var G = document.getElementById("G");
+        R.style.display = "none";
+        G.style.display = "block";
         await screenLockApi();
         mediaRecorder.stop();
         const stream = [videoRef.current.srcObject];
@@ -52,6 +56,7 @@ const Camera = () => {
         if (e.data.size > 0) {
             const dataArr = [e.data];
             const blob = new Blob(dataArr, { type: "video/webm" });
+            uploadAWS(blob);
             const url = URL.createObjectURL(blob);
             const download = document.createElement("a");
             document.body.appendChild(download);
@@ -63,7 +68,26 @@ const Camera = () => {
         }
     }
 
+    const uploadAWS = async (blob) => {
+        const url = await fetch("/api/aws", {
+            method: "GET"
+        }).then((res) => res.json()).then((data) => data.uploadURL);
+        console.log(url);
+        const response = await fetch(url, {
+            method: "PUT",
+            body: blob,
+            headers: {
+                "Content-Type": "video/webm"
+            }
+        }).then((res) => res.text());
+        console.log(response);
+    }
+
     const startRecording = async () => {
+        var R = document.getElementById("R");
+        var G = document.getElementById("G");
+        R.style.display = "block";
+        G.style.display = "none";
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
                 .then(stream => {
@@ -87,18 +111,19 @@ const Camera = () => {
     }, []);
 
     return (
-        <>
-            <h1 className="text-5xl mb-4">Welcome to SafeStream</h1>
-            <div className="max-w-[1280px]">
-                <video ref={videoRef} autoPlay muted />
+        <div className="w-[100%]">
+            <h1 className="text-6xl font-bold mb-6 text-spacecadet mx-auto relative text-center">Welcome to SafeStream</h1>
+            <div className="relative max-w-[1280px] border-8 mx-2 md:mx-auto md:w-1/2 md:p-2 rounded-[16px] overflow-hidden bg-white border-queenblue"> 
+                <video ref={videoRef} autoPlay muted className="rounded-[8px]"/>
+                <button id="R" className="absolute right-0 left-0 mx-auto top-[25%] md:top-[40%] bg-red-500 text-white font-bold text-6xl py-8 max-w-[15rem] max-h-[15rem] md:max-w-[20rem] md:max-h-[20rem] rounded-full" onClick={stopRecording}>STOP</button>
+                <button id="G" className="absolute right-0 left-0 mx-auto top-[25%] md:top-[40%] bg-green-500 text-white font-bold text-6xl py-8 max-w-[15rem] max-h-[15rem] md:max-w-[20rem] md:max-h-[20rem] rounded-full" onClick={startRecording}>START</button>
                 {/* <video className="my-4" ref={videoRef2} autoPlay muted /> */}
             </div>
-            <div className="max-w-[1250px]">
-                <h1 className="text-3xl mt-4 overflow-hidden">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h1>
+            <div className="">
+                <h3 className="text-sm mt-2 mb-4 overflow-hidden text-spacecadet text-center">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h3>
             </div>
-            <button className="bg-red-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={stopRecording}>STOP</button>
-            <button className="bg-green-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={startRecording}>START (DEBUG ONLY)</button>
-        </>
+            {/* <button className="bg-green-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={startRecording}>START (DEBUG ONLY)</button> */}
+        </div>
     );
 }
 
