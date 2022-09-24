@@ -67,21 +67,25 @@ const Camera = () => {
     }
 
     const startRecording = async () => {
+        let cameras = [];
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true })
                 .then(stream => {
+                    console.log("first", stream);
                     let video = videoRef.current;
                     video.srcObject = stream;
                     video.play().catch(err => console.log(err));
                 })
-                .catch(err => console.error(err));
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+                .catch(err => console.error(err)).finally(() => {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
                 .then(stream => {
+                    console.log("second", stream);
                     let video = videoRef2.current;
                     video.srcObject = stream;
                     video.play().catch(err => console.log(err));
                 })
                 .catch(err => console.error(err));
+                });
         }
     }
 
