@@ -8,13 +8,8 @@ const Camera = () => {
 
     async function stopRecording() {
         await screenLockApi();
-        console.log(videoRef.current);
-        const stream = videoRef.current.srcObject;
-        const tracks = stream.getTracks();
-        //stop everything
-        tracks.forEach(track => {
-            track.stop();
-        })
+        const stream = [videoRef.current.srcObject, videoRef2.current.srcObject];
+        const tracks = stream.forEach((stream) => stream.getTracks().forEach((track) => track.stop()));
     }
 
     const screenLockApi = async () => {
