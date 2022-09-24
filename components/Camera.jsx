@@ -6,7 +6,7 @@ const Camera = () => {
     const [screenLock, setScreenLock] = useState(null);
 
     const videoRef = useRef(null);
-    const streamRef = useRef(null);
+    const videoRef2 = useRef(null);
 
     const getDevices = async () => {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -68,15 +68,20 @@ const Camera = () => {
 
     const startRecording = async () => {
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true })
                 .then(stream => {
                     let video = videoRef.current;
                     video.srcObject = stream;
-                    streamRef.current = stream;
                     video.play().catch(err => console.log(err));
                 })
                 .catch(err => console.error(err));
-            getDevices();
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
+                .then(stream => {
+                    let video = videoRef2.current;
+                    video.srcObject = stream;
+                    video.play().catch(err => console.log(err));
+                })
+                .catch(err => console.error(err));
         }
     }
 
@@ -88,7 +93,8 @@ const Camera = () => {
         <>
             <h1 className="text-5xl mb-4">Welcome to SafeStream</h1>
             <div className="max-w-[1280px]">
-                <video ref={videoRef} autoPlay muted></video>
+                <video ref={videoRef} autoPlay muted />
+                <video className="my-4" ref={videoRef2} autoPlay muted />
             </div>
             <div className="max-w-[1250px]">
                 <h1 className="text-3xl mt-4 overflow-hidden">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h1>
