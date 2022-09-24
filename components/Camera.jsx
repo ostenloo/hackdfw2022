@@ -60,7 +60,7 @@ const Camera = () => {
                 })
                 .catch(err => console.error(err))
                 .finally(() => {
-                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
+                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
                         .then(stream => {
                             console.log("second", stream);
                             let video = videoRef2.current;
