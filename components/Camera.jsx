@@ -26,10 +26,9 @@ const Camera = () => {
         tracks.forEach(track => {
             track.stop();
         })
-        videoRef = null;
     }
 
-    useEffect(() => {
+    const startRecording = async () => {
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                 .then(stream => {
@@ -41,6 +40,10 @@ const Camera = () => {
                 .catch(err => console.error(err));
             getDevices();
         }
+    }
+
+    useEffect(() => {
+        startRecording();
 
     }, []);
 
@@ -54,6 +57,7 @@ const Camera = () => {
                 <h1 className="text-3xl mt-4 overflow-hidden">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h1>
             </div>
             <button className="bg-red-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={stopRecording}>STOP</button>
+            <button className="bg-green-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={startRecording}>START</button>
         </>
     );
 }
