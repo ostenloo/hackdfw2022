@@ -19,20 +19,13 @@ const Camera = () => {
         return;
     }
 
-<<<<<<< Updated upstream
     function stopRecording() {
-=======
-<<<<<<< Updated upstream
-    async function stopRecording() {
-        await screenLockApi();
-=======
+
     function saveRecording(stream) {
         //save the stream to file system
     }
 
     function stopRecording() {
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         console.log(videoRef.current);
         const stream = videoRef.current.srcObject;
         const tracks = stream.getTracks();
