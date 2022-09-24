@@ -5,6 +5,7 @@ const Camera = () => {
     const [mics, setMics] = useState([]);
 
     const videoRef = useRef(null);
+    const streamRef = useRef(null);
 
     const getDevices = async () => {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -17,13 +18,25 @@ const Camera = () => {
         return;
     }
 
+    function stopRecording() {
+        console.log(videoRef.current);
+        const stream = videoRef.current.srcObject;
+        const tracks = stream.getTracks();
+        //stop everything
+        tracks.forEach(track => {
+            track.stop();
+        })
+        videoRef = null;
+    }
+
     useEffect(() => {
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                 .then(stream => {
                     let video = videoRef.current;
                     video.srcObject = stream;
-                    video.play();
+                    streamRef.current = stream;
+                    video.play().catch(err => console.log(err));
                 })
                 .catch(err => console.error(err));
             getDevices();
@@ -40,7 +53,7 @@ const Camera = () => {
             <div className="max-w-[1250px]">
                 <h1 className="text-3xl mt-4 overflow-hidden">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h1>
             </div>
-            <button className="bg-red-500 text-white text-3xl p-4 mt-4 rounded-lg">STOP</button>
+            <button className="bg-red-500 text-white text-3xl p-4 mt-4 rounded-lg" onClick={stopRecording}>STOP</button>
         </>
     );
 }
