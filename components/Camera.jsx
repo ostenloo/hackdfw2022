@@ -74,9 +74,7 @@ const Camera = () => {
 
     useEffect(() => {
         async function pageLoad() { await startRecording(); }
-        if (!loadRef.current) {
-            loadRef.current = true;
-        } else pageLoad();        
+        pageLoad();        
     }, []);
 
     return (
