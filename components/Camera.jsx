@@ -75,7 +75,7 @@ const Camera = () => {
                     video.play().catch(err => console.log(err));
                 })
                 .catch(err => console.error(err));
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                 .then(stream => {
                     let video = videoRef2.current;
                     video.srcObject = stream;
