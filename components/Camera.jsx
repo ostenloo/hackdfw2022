@@ -1,13 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Camera = () => {
-    const loadRef = useRef(false);
-
     const videoRef = useRef(null);
-    const videoRef2 = useRef(null);
+    const [mediaRecorder, setMediaRecorder] = useState(null);
 
     async function stopRecording() {
         await screenLockApi();
+        mediaRecorder.stop();
         const stream = [videoRef.current.srcObject];
         stream.forEach((stream) => stream.getTracks().forEach((track) => track.stop()));
     }
@@ -48,32 +47,53 @@ const Camera = () => {
         }
     }
 
+    const handleDataAvailable = (e) => {
+        console.log("data is available");
+        if (e.data.size > 0) {
+            const dataArr = [e.data];
+            const blob = new Blob(dataArr, { type: "video/webm" });
+            const url = URL.createObjectURL(blob);
+            const download = document.createElement("a");
+            document.body.appendChild(download);
+            download.style = "display: none";
+            download.href = url;
+            download.download = `SafeStream-${new Date(Date.now()).toISOString()}.webm`;
+            download.click();
+            window.URL.revokeObjectURL(url);
+        }
+    }
+
     const startRecording = async () => {
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
                 .then(stream => {
                     console.log("first", stream);
+                    const recordingOptions = { mimeType: "video/webm; codecs=vp9" };
+                    const r = new MediaRecorder(stream, recordingOptions)
+                    setMediaRecorder(r);
+                    r.ondataavailable = handleDataAvailable;
+                    r.start();
                     let video = videoRef.current;
                     video.srcObject = stream;
                     video.play().catch(err => console.log(err));
                 })
                 .catch(err => console.error(err));
-                // .finally(() => {
-                //     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
-                //         .then(stream => {
-                //             console.log("second", stream);
-                //             let video = videoRef2.current;
-                //             video.srcObject = stream;
-                //             video.play().catch(err => console.log(err));
-                //         })
-                //         .catch(err => console.error(err));
-                // });
+            // .finally(() => {
+            //     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
+            //         .then(stream => {
+            //             console.log("second", stream);
+            //             let video = videoRef2.current;
+            //             video.srcObject = stream;
+            //             video.play().catch(err => console.log(err));
+            //         })
+            //         .catch(err => console.error(err));
+            // });
         }
     }
 
     useEffect(() => {
         async function pageLoad() { await startRecording(); }
-        pageLoad();        
+        pageLoad();
     }, []);
 
     return (
