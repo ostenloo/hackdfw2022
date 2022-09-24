@@ -19,7 +19,8 @@ const Camera = () => {
         return;
     }
 
-    function stopRecording() {
+    async function stopRecording() {
+        await screenLockApi();
         console.log(videoRef.current);
         const stream = videoRef.current.srcObject;
         const tracks = stream.getTracks();
@@ -66,7 +67,6 @@ const Camera = () => {
     }
 
     const startRecording = async () => {
-        await screenLockApi();
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                 .then(stream => {
