@@ -1,32 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Camera = () => {
-    const [cameras, setCameras] = useState([]);
-    const [mics, setMics] = useState([]);
-    const [screenLock, setScreenLock] = useState(null);
+    const loadRef = useRef(false);
 
     const videoRef = useRef(null);
-    const streamRef = useRef(null);
+    const videoRef2 = useRef(null);
 
-    const getDevices = async () => {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const cameras = devices.filter(device => device.kind === "videoinput");
-        console.log(cameras);
-        const mics = devices.filter(device => device.kind === "audioinput");
-        console.log(mics);
-        setCameras(cameras);
-        setMics(mics);
-        return;
-    }
-
-    function stopRecording() {
-        console.log(videoRef.current);
-        const stream = videoRef.current.srcObject;
-        const tracks = stream.getTracks();
-        //stop everything
-        tracks.forEach(track => {
-            track.stop();
-        })
+    async function stopRecording() {
+        await screenLockApi();
+        const stream = [videoRef.current.srcObject];
+        stream.forEach((stream) => stream.getTracks().forEach((track) => track.stop()));
     }
 
     const screenLockApi = async () => {
@@ -66,29 +49,39 @@ const Camera = () => {
     }
 
     const startRecording = async () => {
-        await screenLockApi();
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
                 .then(stream => {
+                    console.log("first", stream);
                     let video = videoRef.current;
                     video.srcObject = stream;
-                    streamRef.current = stream;
                     video.play().catch(err => console.log(err));
                 })
                 .catch(err => console.error(err));
-            getDevices();
+                // .finally(() => {
+                //     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { min: 1280, ideal: 1920, max: 3840 }, height: { min: 720, ideal: 1080, max: 2160 } }, audio: true })
+                //         .then(stream => {
+                //             console.log("second", stream);
+                //             let video = videoRef2.current;
+                //             video.srcObject = stream;
+                //             video.play().catch(err => console.log(err));
+                //         })
+                //         .catch(err => console.error(err));
+                // });
         }
     }
 
     useEffect(() => {
-        startRecording();
+        async function pageLoad() { await startRecording(); }
+        pageLoad();        
     }, []);
 
     return (
         <>
             <h1 className="text-5xl mb-4">Welcome to SafeStream</h1>
             <div className="max-w-[1280px]">
-                <video ref={videoRef} autoPlay muted></video>
+                <video ref={videoRef} autoPlay muted />
+                {/* <video className="my-4" ref={videoRef2} autoPlay muted /> */}
             </div>
             <div className="max-w-[1250px]">
                 <h1 className="text-3xl mt-4 overflow-hidden">THE APP IS CURRENTLY RECORDING YOUR CAMERA AND MICROPHONE. PRESS THE BUTTON ONLY WHEN THREAT IS NO LONGER PRESENT.</h1>
