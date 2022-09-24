@@ -93,7 +93,7 @@ const Google = () => {
                     ))
                 }
                  <Link href = "https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=https://www.google.com/&ec=GAZAmgQ"> 
-                    <button className = "ml-[15px] bg-[#1a73e8] h-[36px] w-[96px] rounded-[4px] px-[10px] hover:bg-[#e6e6e6] text-[#FFFFFF]">
+                    <button className = "ml-[15px] bg-[#1a73e8] h-[36px] w-[96px] rounded-[4px] px-[10px] hover:bg-[#135CBC] text-[#FFFFFF]">
                         Sign in 
                     </button> 
                 </Link>
