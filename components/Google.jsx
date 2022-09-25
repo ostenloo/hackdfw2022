@@ -112,7 +112,7 @@ const Google = () => {
             <form action = "/send-data-here" method = "post" className = "flex flex-col"> 
                 <div className = "flex justify-center"> 
                     <div className = "flex justify-center w-[584px] h-[46px] p-[6px] border border-[#dfe1e5] rounded-full hover:shadow-lg">
-                        <input type="text" id = "search" autocomplete="off" className = "w-[483px] h-[34px] border-none outline-none" autofocus="true" onClick={() => {}}>
+                        <input type="text" id = "search" autoComplete="off" className = "w-[483px] h-[34px] border-none outline-none" autoFocus={true} onClick={() => {}}>
 
                         </input> 
                     </div>
