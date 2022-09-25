@@ -120,8 +120,8 @@ const Google = () => {
                 <div className = "flex justify-center"> 
                 <div className = "h-[88px]">
                     <div className = "my-[15px]">
-                        <button type="submit" className = "rounded bg-[#f8f9fa] min-h-[36px] px-[16px] mx-[6px] my-[11px] text-[#3c4043] hover:shadow">Google Search</button>
-                        <button type="submit" className = "rounded bg-[#f8f9fa] min-h-[36px] px-[16px] mx-[6px] my-[11px] text-[#3c4043] hover:shadow">I&apos;m Feeling Lucky</button>
+                        <button type="submit" className = "rounded sm:rounded-full bg-[#f8f9fa] min-h-[36px] px-[16px] mx-[6px] my-[11px] text-[#3c4043] hover:shadow">Google Search</button>
+                        <button type="submit" className = "rounded sm:rounded-full bg-[#f8f9fa] min-h-[36px] px-[16px] mx-[6px] my-[11px] text-[#3c4043] hover:shadow">I&apos;m Feeling Lucky</button>
                     </div> 
                 </div>
                 </div> 

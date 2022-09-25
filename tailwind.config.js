@@ -5,10 +5,6 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
-    colors : {
-      
-    },
     extend: {
       fontFamily: { 
         google : ['Roboto,arial,sans-serif'],
@@ -22,6 +18,9 @@ module.exports = {
         'unblue': '#6290C8',
         'ceruleanfrost': '#829CBC',
       },
+      screens: {
+        sm: "680px",
+      }
     },
   },
   plugins: [
